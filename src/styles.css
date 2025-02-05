@@ -1,0 +1,30 @@
+
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.titulo {
+    font-family: 'Montserrat', sans-serif;
+}
+
+ 
+label,
+.subtitulo,
+button,
+.form-select,
+.btn {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    
+}
+
+.linea-separadora {
+    border: 0;
+    height: 1px;
+    background-color: black;
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
