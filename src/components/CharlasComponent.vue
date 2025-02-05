@@ -654,6 +654,7 @@ export default {
 
 .custom-buttons-container {
   display: flex;
+  flex-wrap: wrap; /*Cambio Producción*/
   /* Usamos flex para alinear los botones */
   align-items: center;
   /* Centrado vertical */
@@ -726,13 +727,13 @@ export default {
   max-height: 400px;
   overflow-y: auto;
   padding-right: 10px;
-  background-color: #d1e7d7;
   border-radius: 10px;
   margin-left: 0px !important;
 }
 
 /* Estilo de cada comentario */
 .comment-item {
+  margin-left: -20px;
   background-color: #ffffff;
   /* Fondo blanco para los comentarios */
   padding: 15px;
