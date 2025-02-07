@@ -139,14 +139,8 @@
               <div v-if="comentarios.length > 0" class="custom-background">
                 <ul class="comment-list">
                   <li v-for="comentario in comentarios" :key="comentario.idComentario" class="comment-item">
-                    <div class="comment-header col-12">
-                      <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
-                        alt="avatar" class="avatar" />
-                      <div class="col-6">
-                        <p class="username">{{ comentario.usuario }}</p>
-                        <p class="timestamp">{{ comentario.fecha }}</p>
-                      </div>
-                      <div v-if="comentario.idUsuario === this.perfilUser.idUsuario" class="d-flex justify-content-end align-items-start col-5 gap-2">
+                    <div class="container-comment">
+                        <div v-if="comentario.idUsuario === this.perfilUser.idUsuario" class="comment-button d-flex justify-content-end align-items-start col-5 gap-2">
                         <button className="editBtn btnUpdate--peq" @click=updateComentario(comentario.idComentario)>
                           <svg height="1em" viewBox="0 0 512 512">
                             <path
@@ -191,6 +185,14 @@
                             </svg>
                           </button>
                         </div>
+                        <div class="comment-header col-12">
+                      <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
+                        alt="avatar" class="avatar" />
+                      <div class="col-6">
+                        <p class="username">{{ comentario.usuario }}</p>
+                        <p class="timestamp">{{ comentario.fecha }}</p>
+                      </div>
+                    </div>
                     </div>
                     <hr />
                     <p class="comment-text">{{ comentario.contenido }}</p>
@@ -852,6 +854,11 @@ export default {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  width: auto;
+}
+.comment-button{
+    width: auto;
+    float: right;
 }
 
 .avatar {
