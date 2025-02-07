@@ -141,7 +141,7 @@
                   <li v-for="comentario in comentarios" :key="comentario.idComentario" class="comment-item">
                     <div class="container-comment">
                         <div v-if="comentario.idUsuario === this.perfilUser.idUsuario" class="comment-button d-flex justify-content-end align-items-start col-5 gap-2">
-                        <button className="editBtn btnUpdate--peq" @click="handleEditComentario(comentario)">
+                        <button className="editBtn btnUpdate--peq" @click="handleEditComentario(comentario, charlaSeleccionada.idCharla)">
                           <svg height="1em" viewBox="0 0 512 512">
                             <path
                               d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"
@@ -208,7 +208,8 @@
               <div class="comment-form">
                 <textarea v-model="newComment" class="form-control" rows="3"
                   placeholder="Escribe tu comentario aquí..."></textarea>
-                <button class="btn custom-button mt-2" @click="(e) => this.handleComentarioAction(e)">Agregar comentario</button>
+                <button v-if="!this.idComentarioEditar" class="btn custom-button mt-2" @click="(e) => this.handleComentarioAction(e)">Agregar comentario</button>
+                <button v-if="this.idComentarioEditar" class="btn custom-button mt-2" @click="(e) => this.handleComentarioAction(e)">Actualizar comentario</button>
               </div>
             </div>
 
@@ -407,6 +408,7 @@ export default {
       this.mostrarDescripcion = false;
       this.mostrarComentarios = false;
       this.mostrarRecursos = false;
+      this.clearForm();
     },
     cargarRondas() {
       serviceCharlas
@@ -563,20 +565,21 @@ export default {
     },
 
     handleComentarioAction(e) {
+      console.log("Id charla: ", this.charlaSeleccionada.idCharla);
       e.preventDefault();
       if (this.idComentarioEditar) {
-        this.updateComentario(e);
+        this.updateComentario(e, this.charlaSeleccionada.idCharla);
       } else {
         this.addComment();
       }
     },
 
-    updateComentario(e) {
+    updateComentario(e, idCharla) {
       console.log("Actualizando comentario...");
       if (!this.newComment.trim()) {
         return;
       }
-      const fechaActual = moment().locale('es').format('DD/MM/YYYY HH:mm'); 
+      //const fechaActual = moment().locale('es').format('DD/MM/YYYY HH:mm'); 
       e.preventDefault();
 
       const comentario = {
@@ -584,8 +587,9 @@ export default {
         idCharla: this.charlaSeleccionada.idCharla,
         idUsuario: this.perfilUser.idUsuario, 
         contenido: this.newComment,
-        fecha: fechaActual,
+        fecha: new Date(),
       };
+      console.log("Fecha actual: " + new Date());
       console.log(comentario);
 
       this.isLoading = true; 
@@ -594,52 +598,14 @@ export default {
       serviceCharlas.updateComentario(comentario)
         .then(() => {
           console.log("entra charladata");
-          this.comentarioEditar = "";  // Limpiar el campo de edición
+          this.newComment = "";  // Limpiar el campo de edición
           this.idComentarioEditar = null;
+          this.cargarComentarios(idCharla)
         })
         .catch((error) => {
           console.error("Error al actualizar el comentario:", error);
         });
         console.log("Comentario modificado:", this.idComentarioEditar);
-    },
-    updateComment() {
-      if (!this.newComment.trim()) {
-        return;
-      }
-      const fechaActual = moment().locale('es').format('DD/MM/YYYY HH:mm'); 
-
-      const comentario = {
-        idComentario: this.idComentario,
-        idCharla: this.charlaSeleccionada.idCharla,
-        idUsuario: this.perfilUser.idUsuario, 
-        contenido: this.newComment,
-        fecha: fechaActual,
-      };
-
-      this.isLoading = true; 
-
-      serviceCharlas
-        .updateComentario(comentario)
-        .then((response) => {
-          console.log("Comentario modificado:", response);
-          Swal.fire({
-            icon: "success",
-            title: "Comentario editado exitosamente!",
-          });
-
-          this.newComment = "";
-          this.cargarComentarios(this.charlaSeleccionada.idCharla);
-          this.isLoading = false;
-        })
-        .catch((error) => {
-          this.isLoading = false;
-          Swal.fire({
-            icon: "error",
-            title: "Error al editar comentario",
-            text: "No se pudo editar el comentario. Revisa los datos enviados.",
-          });
-          console.error("Error al editar el comentario:", error);
-        });
     },
     async eliminarComentario(idComentario, idCharla) {
       try {
@@ -662,6 +628,10 @@ export default {
         return `🗳️ ${this.formatearTiempo(fechaCierre - fechaVotacion)} - Vota ya!`;
       }
       return `🔚 Finalizado`;
+    },
+    clearForm() {
+      this.newComment = "";
+      this.idComentarioEditar = null;
     },
     formatearTiempo(ms) {
       const dias = Math.floor(ms / (1000 * 60 * 60 * 24));

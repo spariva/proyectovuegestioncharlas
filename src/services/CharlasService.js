@@ -448,18 +448,36 @@ export default class CharlasService {
         });
     }
 
-    updateComentario(comentario){
-		const request = "api/comentarios";
-		const url = Global.urlBase + request;
-        const token = Cookies.get('bearer_token');
-        console.log(token);
+    // updateComentario(comentario){
+	// 	const request = "api/comentarios";
+	// 	const url = Global.urlBase + request;
+    //     const token = Cookies.get('bearer_token');
+    //     console.log(token);
 
-		return axios.put(url, comentario, {
-			headers: {
-				'Authorization': token
-			}
-		})
-	}
+	// 	return axios.put(url, comentario, {
+	// 		headers: {
+	// 			'Authorization': token
+	// 		}
+	// 	})
+	// }
+
+    updateComentario(comentario) {
+        return new Promise((resolve, reject) => {
+            const endpoint = "api/comentarios";
+            console.log("Comentario " + comentario);
+            const token = Cookies.get('bearer_token');
+            axios.put(Global.urlBase + endpoint, comentario, {
+                headers: {
+                    Authorization: token,
+                },
+            })
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error("Error al actualizar el comentario:", error.response ? error.response.data : error);
+                reject(error);
+            });
+        });
+    }
 
     editarCharla(charlaActualizada) {
         return new Promise((resolve, reject) => {

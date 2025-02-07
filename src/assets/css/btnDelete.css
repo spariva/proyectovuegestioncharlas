@@ -7,7 +7,7 @@
   width: 55px;
   height: 55px;
   border-radius: 15px;
-  background-color: rgb(255, 95, 95);
+  background-color: #c54646;
   cursor: pointer;
   border: 3px solid rgb(255, 201, 201);
   transition-duration: 0.3s;
@@ -24,7 +24,7 @@
   transform: rotate(45deg);
 }
 .bin-button:hover {
-  background-color: rgb(255, 0, 0);
+  background-color: #da4e4e;
 }
 .bin-button:active {
   transform: scale(0.9);

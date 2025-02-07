@@ -1,9 +1,9 @@
 .editBtn {
   width: 55px;
   height: 55px;
-  border-radius: 20px;
+  border-radius: 15px;
   border: none;
-  background-color: rgb(97, 123, 252);
+  background-color: #4651c5;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11,7 +11,7 @@
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  border: 3px solid rgb(116, 158, 255);
+  border: 3px solid rgb(129, 167, 255);
   transition: all 0.3s;
 }
 .editBtn::before {
